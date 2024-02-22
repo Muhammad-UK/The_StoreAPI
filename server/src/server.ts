@@ -1,5 +1,12 @@
 import express from "express";
-import { client, createProduct, createTables, createUser } from "./db";
+import {
+  client,
+  createProduct,
+  createTables,
+  createUser,
+  fetchProducts,
+  fetchUsers,
+} from "./db";
 import { Product, User } from "./types";
 
 const app = express();
@@ -32,8 +39,8 @@ const init = async () => {
     ]);
 
   console.log("Created users and products");
-  console.log(Liam, Nora, Evan, Maya);
-  console.log(Milk, Eggs, Rice, Pasta, Beef, Beans, Chips, Bread);
+  console.log(await fetchUsers());
+  console.log(await fetchProducts());
 };
 
 init();

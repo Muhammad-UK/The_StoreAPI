@@ -56,3 +56,19 @@ export const createProduct = async ({ name }: Product): Promise<Product> => {
   const response = await client.query(SQL, [uuidv4(), name]);
   return response.rows[0] as Product;
 };
+
+export const fetchUsers = async (): Promise<User[]> => {
+  const SQL = /*sql*/ `
+    SELECT id, username FROM users;
+  `;
+  const response = await client.query(SQL);
+  return response.rows as User[];
+};
+
+export const fetchProducts = async (): Promise<Product[]> => {
+  const SQL = /*sql*/ `
+    SELECT * FROM products;
+  `;
+  const response = await client.query(SQL);
+  return response.rows as Product[];
+};
