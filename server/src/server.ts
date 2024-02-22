@@ -1,9 +1,11 @@
 import express from "express";
 import {
   client,
+  createFavorite,
   createProduct,
   createTables,
   createUser,
+  fetchFavorites,
   fetchProducts,
   fetchUsers,
 } from "./db";
@@ -41,6 +43,15 @@ const init = async () => {
   console.log("Created users and products");
   console.log(await fetchUsers());
   console.log(await fetchProducts());
+
+  await Promise.all([
+    createFavorite(Milk, Liam),
+    createFavorite(Bread, Maya),
+    createFavorite(Beef, Evan),
+    createFavorite(Rice, Nora),
+  ]);
+  console.log("Created some favorites");
+  console.log(await fetchFavorites());
 };
 
 init();

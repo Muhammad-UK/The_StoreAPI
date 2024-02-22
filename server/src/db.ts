@@ -1,6 +1,6 @@
 import pg from "pg";
 import { v4 as uuidv4 } from "uuid";
-import { Product, User } from "./types";
+import { Favorite, Product, User } from "./types";
 import { response } from "express";
 
 export const client = new pg.Client(
@@ -57,6 +57,19 @@ export const createProduct = async ({ name }: Product): Promise<Product> => {
   return response.rows[0] as Product;
 };
 
+export const createFavorite = async (
+  product: Product,
+  user: User
+): Promise<Favorite> => {
+  const SQL = /*sql*/ `
+    INSERT INTO favorites(id, product_id, user_id)
+    VALUES($1, $2, $3)
+    RETURNING *;
+  `;
+  const response = await client.query(SQL, [uuidv4(), product.id, user.id]);
+  return response.rows[0] as Favorite;
+};
+
 export const fetchUsers = async (): Promise<User[]> => {
   const SQL = /*sql*/ `
     SELECT id, username FROM users;
@@ -71,4 +84,12 @@ export const fetchProducts = async (): Promise<Product[]> => {
   `;
   const response = await client.query(SQL);
   return response.rows as Product[];
+};
+
+export const fetchFavorites = async (): Promise<Favorite[]> => {
+  const SQL = /*sql*/ `
+    SELECT * FROM favorites;
+  `;
+  const response = await client.query(SQL);
+  return response.rows as Favorite[];
 };

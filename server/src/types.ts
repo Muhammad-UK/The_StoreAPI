@@ -7,3 +7,8 @@ export type Product = {
   id?: string;
   name: string;
 };
+export type Favorite = {
+  id?: string;
+  user_id: string;
+  product_id: string;
+};
