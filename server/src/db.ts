@@ -58,15 +58,15 @@ export const createProduct = async ({ name }: Product): Promise<Product> => {
 };
 
 export const createFavorite = async (
-  product: Product,
-  user: User
+  product_id: string,
+  user_id: string
 ): Promise<Favorite> => {
   const SQL = /*sql*/ `
     INSERT INTO favorites(id, product_id, user_id)
     VALUES($1, $2, $3)
     RETURNING *;
   `;
-  const response = await client.query(SQL, [uuidv4(), product.id, user.id]);
+  const response = await client.query(SQL, [uuidv4(), product_id, user_id]);
   return response.rows[0] as Favorite;
 };
 

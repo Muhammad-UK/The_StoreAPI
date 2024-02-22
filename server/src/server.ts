@@ -45,10 +45,10 @@ const init = async () => {
   console.log(await fetchProducts());
 
   await Promise.all([
-    createFavorite(Milk, Liam),
-    createFavorite(Bread, Maya),
-    createFavorite(Beef, Evan),
-    createFavorite(Rice, Nora),
+    createFavorite(Milk.id!, Liam.id!),
+    createFavorite(Bread.id!, Maya.id!),
+    createFavorite(Beef.id!, Evan.id!),
+    createFavorite(Rice.id!, Nora.id!),
   ]);
   console.log("Created some favorites");
   console.log(await fetchFavorites());
