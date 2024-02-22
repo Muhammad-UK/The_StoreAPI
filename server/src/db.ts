@@ -1,4 +1,7 @@
 import pg from "pg";
+import { v4 as uuidv4 } from "uuid";
+import { Product, User } from "./types";
+import { response } from "express";
 
 export const client = new pg.Client(
   process.env.DATABASE_URL || "postgres://localhost/acme_the_store"
@@ -29,4 +32,27 @@ export const createTables = async () => {
         );
     `;
   await client.query(SQL);
+};
+
+export const createUser = async ({
+  username,
+  password,
+}: User): Promise<User> => {
+  const SQL = /*sql*/ `
+    INSERT INTO users(id, username, password)
+    VALUES($1, $2, $3)
+    RETURNING id, username;
+  `;
+  const response = await client.query(SQL, [uuidv4(), username, password]);
+  return response.rows[0] as User;
+};
+
+export const createProduct = async ({ name }: Product): Promise<Product> => {
+  const SQL = /*sql*/ `
+    INSERT INTO products(id, name)
+    VALUES($1, $2)
+    RETURNING *;
+  `;
+  const response = await client.query(SQL, [uuidv4(), name]);
+  return response.rows[0] as Product;
 };
