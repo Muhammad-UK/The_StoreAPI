@@ -1,7 +1,7 @@
 import pg from "pg";
 import { v4 as uuidv4 } from "uuid";
 import { Favorite, Product, User } from "./types";
-import { response } from "express";
+import bcrypt from "bcrypt";
 
 export const client = new pg.Client(
   process.env.DATABASE_URL || "postgres://localhost/acme_the_store"
@@ -43,7 +43,11 @@ export const createUser = async ({
     VALUES($1, $2, $3)
     RETURNING id, username;
   `;
-  const response = await client.query(SQL, [uuidv4(), username, password]);
+  const response = await client.query(SQL, [
+    uuidv4(),
+    username,
+    await bcrypt.hash(password, 5),
+  ]);
   return response.rows[0] as User;
 };
 
