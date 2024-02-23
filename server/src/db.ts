@@ -99,3 +99,14 @@ export const fetchFavorites = async (user_id: string): Promise<Favorite[]> => {
   const response = await client.query(SQL, [user_id]);
   return response.rows as Favorite[];
 };
+
+export const deleteFavorite = async (favorite_id: string, user_id: string) => {
+  // Just having some fun with syntax
+  await client.query(
+    /*sql*/ `
+  DELETE FROM favorites
+  WHERE id = $1 AND user_id = $2;
+`,
+    [favorite_id, user_id]
+  );
+};
