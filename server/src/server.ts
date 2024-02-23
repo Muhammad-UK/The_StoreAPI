@@ -49,9 +49,15 @@ const init = async () => {
     createFavorite(Bread.id!, Maya.id!),
     createFavorite(Beef.id!, Evan.id!),
     createFavorite(Rice.id!, Nora.id!),
+    createFavorite(Beans.id!, Nora.id!),
   ]);
   console.log("Created some favorites");
-  console.log(await fetchFavorites());
+  console.log(
+    "Liam's favorites: " + JSON.stringify(await fetchFavorites(Liam.id!))
+  );
+  console.log(
+    "Nora's favorites: " + JSON.stringify(await fetchFavorites(Nora.id!))
+  );
 };
 
 init();

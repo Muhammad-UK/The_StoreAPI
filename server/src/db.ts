@@ -90,10 +90,12 @@ export const fetchProducts = async (): Promise<Product[]> => {
   return response.rows as Product[];
 };
 
-export const fetchFavorites = async (): Promise<Favorite[]> => {
+export const fetchFavorites = async (user_id: string): Promise<Favorite[]> => {
   const SQL = /*sql*/ `
-    SELECT * FROM favorites;
+    SELECT * 
+    FROM favorites
+    WHERE $1 = user_id;
   `;
-  const response = await client.query(SQL);
+  const response = await client.query(SQL, [user_id]);
   return response.rows as Favorite[];
 };
