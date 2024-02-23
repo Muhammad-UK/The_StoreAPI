@@ -14,6 +14,21 @@ import { Product, User } from "./types";
 const app = express();
 app.use(express.json());
 
+app.get("/api/users", async (req, res, next) => {
+  try {
+    res.send(await fetchUsers());
+  } catch (error) {
+    next(error);
+  }
+});
+app.get("/api/products", async (req, res, next) => {
+  try {
+    res.send(await fetchProducts());
+  } catch (error) {
+    next(error);
+  }
+});
+
 const init = async () => {
   console.log("Connecting to database...");
   await client.connect();
@@ -58,6 +73,9 @@ const init = async () => {
   console.log(
     "Nora's favorites: " + JSON.stringify(await fetchFavorites(Nora.id!))
   );
+
+  const port = process.env.PORT || 3000;
+  app.listen(port, () => console.log(`Listening on port ${port}`));
 };
 
 init();
