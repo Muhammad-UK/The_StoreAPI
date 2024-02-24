@@ -5,6 +5,7 @@ import {
   createProduct,
   createTables,
   createUser,
+  deleteFavorite,
   fetchFavorites,
   fetchProducts,
   fetchUsers,
@@ -71,6 +72,19 @@ app.post("/api/users/:user_id/favorites", async (req, res, next) => {
   }
 });
 
+// DELETE Route:
+app.delete(
+  "/api/users/:user_id/favorites/:favorite_id",
+  async (req, res, next) => {
+    try {
+      await deleteFavorite(req.params.favorite_id, req.params.user_id);
+      res.sendStatus(204);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 // Server Initialization:
 const init = async () => {
   console.log("Connecting to database...");
@@ -126,6 +140,23 @@ const init = async () => {
   console.log(`curl localhost:3000/api/users`);
   console.log(`curl localhost:3000/api/products`);
   console.log(`curl localhost:3000/api/users/${Maya.id}/favorites`);
+
+  console.log("POST tests:");
+
+  console.log("Create a user:");
+  console.log(
+    `curl localhost:3000/api/users -X POST -H 'Content-type:application/json' -d '{"username":"Josh", "password": "j0shi$re4llyc0Ol"}'`
+  );
+
+  console.log("Create a product:");
+  console.log(
+    `curl localhost:3000/api/products -X POST -H 'Content-type:application/json' -d '{"name":"Trix"}'`
+  );
+
+  console.log("Make the new user favorite the new product:");
+  console.log(
+    `curl localhost:3000/api/users/<insert created user_id>/favorites -X POST -H 'Content-type:application/json' -d '{"product_id": "<insert created product_id>"}'`
+  );
 };
 
 init();
