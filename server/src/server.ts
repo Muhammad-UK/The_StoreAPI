@@ -28,6 +28,13 @@ app.get("/api/products", async (req, res, next) => {
     next(error);
   }
 });
+app.get("/api/users/:user_id/favorites", async (req, res, next) => {
+  try {
+    res.send(await fetchFavorites(req.params.user_id));
+  } catch (error) {
+    next(error);
+  }
+});
 
 const init = async () => {
   console.log("Connecting to database...");
@@ -76,6 +83,13 @@ const init = async () => {
 
   const port = process.env.PORT || 3000;
   app.listen(port, () => console.log(`Listening on port ${port}`));
+
+  console.log("Some curl commands to test:");
+
+  console.log("GET tests:");
+  console.log(`curl localhost:3000/api/users`);
+  console.log(`curl localhost:3000/api/products`);
+  console.log(`curl localhost:3000/api/users/${Maya.id}/favorites`);
 };
 
 init();
