@@ -61,10 +61,10 @@ export const createProduct = async ({ name }: Product): Promise<Product> => {
   return response.rows[0] as Product;
 };
 
-export const createFavorite = async (
-  product_id: string,
-  user_id: string
-): Promise<Favorite> => {
+export const createFavorite = async ({
+  product_id,
+  user_id,
+}: Favorite): Promise<Favorite> => {
   const SQL = /*sql*/ `
     INSERT INTO favorites(id, product_id, user_id)
     VALUES($1, $2, $3)

@@ -9,11 +9,12 @@ import {
   fetchProducts,
   fetchUsers,
 } from "./db";
-import { Product, User } from "./types";
+import { Favorite, Product, User } from "./types";
 
 const app = express();
 app.use(express.json());
 
+// GET Routes:
 app.get("/api/users", async (req, res, next) => {
   try {
     res.send(await fetchUsers());
@@ -36,6 +37,41 @@ app.get("/api/users/:user_id/favorites", async (req, res, next) => {
   }
 });
 
+//POST Routes:
+app.post("/api/users", async (req, res, next) => {
+  try {
+    const newUser: User = {
+      username: req.body.username,
+      password: req.body.password,
+    };
+    res.status(201).send(await createUser(newUser));
+  } catch (error) {
+    next(error);
+  }
+});
+app.post("/api/products", async (req, res, next) => {
+  try {
+    const newProduct: Product = {
+      name: req.body.name,
+    };
+    res.status(201).send(await createProduct(newProduct));
+  } catch (error) {
+    next(error);
+  }
+});
+app.post("/api/users/:user_id/favorites", async (req, res, next) => {
+  try {
+    const newFavorite: Favorite = {
+      user_id: req.params.user_id,
+      product_id: req.body.product_id,
+    };
+    res.status(201).send(await createFavorite(newFavorite));
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Server Initialization:
 const init = async () => {
   console.log("Connecting to database...");
   await client.connect();
@@ -67,11 +103,11 @@ const init = async () => {
   console.log(await fetchProducts());
 
   await Promise.all([
-    createFavorite(Milk.id!, Liam.id!),
-    createFavorite(Bread.id!, Maya.id!),
-    createFavorite(Beef.id!, Evan.id!),
-    createFavorite(Rice.id!, Nora.id!),
-    createFavorite(Beans.id!, Nora.id!),
+    createFavorite({ product_id: Milk.id!, user_id: Liam.id! }),
+    createFavorite({ product_id: Bread.id!, user_id: Maya.id! }),
+    createFavorite({ product_id: Beef.id!, user_id: Evan.id! }),
+    createFavorite({ product_id: Rice.id!, user_id: Nora.id! }),
+    createFavorite({ product_id: Beans.id!, user_id: Nora.id! }),
   ]);
   console.log("Created some favorites");
   console.log(
