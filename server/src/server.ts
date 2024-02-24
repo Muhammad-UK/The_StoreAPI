@@ -157,6 +157,11 @@ const init = async () => {
   console.log(
     `curl localhost:3000/api/users/<insert created user_id>/favorites -X POST -H 'Content-type:application/json' -d '{"product_id": "<insert created product_id>"}'`
   );
+
+  console.log("Delete the new favorite:");
+  console.log(
+    `curl localhost:3000/api/users/<insert the user_id>/favorites/<insert the favorites_id> -X DELETE`
+  );
 };
 
 init();
