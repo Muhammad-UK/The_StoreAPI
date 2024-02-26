@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import { Favorite, Product, User } from "../../server/src/types";
-import { fetchProducts } from "../../server/src/db";
 
 function App() {
   const [users, setUsers] = useState<User[]>([]);
@@ -15,6 +14,11 @@ function App() {
       setUsers(json as User[]);
     };
     fetchUsers();
+    users.forEach(async (user) => {
+      const response = await fetch(`/api/users/${user.id}/favorites`);
+      const json = await response.json();
+      setFavorites(json as Favorite[]);
+    });
   }, []);
   useEffect(() => {
     const fetchProducts = async () => {
@@ -24,29 +28,49 @@ function App() {
     };
     fetchProducts();
   }, []);
-  // useEffect(() => {
-  //   const fetchFavorites = async () => {
-  //     const response = await fetch("/api/favorites");
-  //     const json = await response.json();
-  //     setFavorites(json as Favorite[]);
-  //   };
-  //   fetchFavorites();
-  // }, []);
+  console.log(users);
+  console.log(favorites);
   return (
-    <div className="p-4 flex flex-wrap gap-56 mb-6">
-      <div className="space-y-2">
+    <div className="px-16 py-8 text-2xl justify-center flex flex-wrap gap-4 w-full lg:px-32 lg:py-16 lg:text-4xl ">
+      <div className="flex-1 space-y-2">
         <h1 className="border-violet-700 border-solid border-4 p-4">Users</h1>
         <ul className="border-violet-700 border-solid border-2 p-2">
           {users.map((user) => {
-            return <li key={user.id}>{user.username}</li>;
+            return (
+              <>
+                <li className="p-2 border-b-2 border-gray-200" key={user.id}>
+                  {user.username}
+                  <span>'s Favorites:</span>
+                </li>
+                <ul className="pl-4">
+                  {favorites.map((favorite) => {
+                    if (favorite.user_id === user.id) {
+                      return (
+                        <li className="text-cyan-700" key={favorite.id}>
+                          {
+                            products.find(
+                              (product) => product.id === favorite.product_id
+                            )?.name
+                          }
+                        </li>
+                      );
+                    }
+                  })}
+                </ul>
+              </>
+            );
           })}
         </ul>
       </div>
-      <div className="space-y-2">
+      <div className="flex-1 space-y-2">
         <h1 className="border-pink-600 border-solid border-4 p-4">Products</h1>
         <ul className="border-pink-600 border-solid border-2 p-2">
           {products.map((product) => {
-            return <li key={product.id}>{product.name}</li>;
+            return (
+              <li className="p-2 border-b-2 border-gray-200" key={product.id}>
+                {product.name}
+              </li>
+            );
           })}
         </ul>
       </div>
